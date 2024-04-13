@@ -38,7 +38,7 @@ services:
   nginx:
     build: ./nginx
     ports:
-      - "80:80"
+      - "81:81"
     volumes:
       - static_volume:/app/static
       - media_volume:/app/media
