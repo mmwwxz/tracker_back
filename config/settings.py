@@ -12,7 +12,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 
+
 from decouple import config as config_settings
+import os
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
