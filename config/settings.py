@@ -88,23 +88,23 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-#  }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config_settings('POSTGRES_DB', 'tracker'),
-        'USER': config_settings('POSTGRES_USER', 'bulbazavr'),
-        'PASSWORD': config_settings('POSTGRES_PASSWORD', '1'),
-        'HOST': 'db',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-}
+ }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': config_settings('POSTGRES_DB', 'tracker'),
+#         'USER': config_settings('POSTGRES_USER', 'bulbazavr'),
+#         'PASSWORD': config_settings('POSTGRES_PASSWORD', '1'),
+#         'HOST': 'db',
+#         'PORT': '5432',
+#     }
+# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
