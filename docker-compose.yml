@@ -35,16 +35,6 @@ services:
       - db
       - redis
 
-  nginx:
-    build: ./nginx
-    ports:
-      - "81:81"
-    volumes:
-      - static_volume:/app/static
-      - media_volume:/app/media
-    depends_on:
-      - web
-
   db:
     image: postgres:latest
     restart: always
