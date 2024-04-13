@@ -237,3 +237,7 @@ CORS_ALLOW_METHODS = (
     "PUT",
 )
 CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = [
+    'https://xn--e1aaowdh.site',
+    'http://localhost:8000',  # Пример для разработки
+]
