@@ -59,6 +59,3 @@ volumes:
   postgres_data:
   static_volume:
   media_volume:
-
-sudo chown -R www-data:www-data /home/ubuntu/tracker_back/static
-sudo chmod -R 755 /home/ubuntu/tracker_back/static
