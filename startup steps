@@ -1,0 +1,107 @@
+.env :
+
+SECRET_KEY=''
+DEBUG=
+ALLOWED_HOSTS=''
+
+POSTGRES_DB=
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+
+EMAIL=''
+EMAIL_USER=''
+EMAIL_PASSWORD=''
+EMAIL_PORT=
+EMAIL_USE_SSL=
+
+BOT_TOKEN=""
+CHAT_ID=
+
+########################################################################################################################################################################################################
+########################################################################################################################################################################################################
+########################################################################################################################################################################################################
+
+Necessary actions to start:
+
+open port 8000 (in AWS EC2 settings)
+git clone -b server https://github.com/.git
+nano .env
+
+
+sudo apt update
+sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo \
+  "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io
+sudo docker --version
+sudo usermod -aG docker $USER
+
+
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+
+
+sudo docker-compose up --build -d
+sudo docker-compose exec web python manage.py makemigrations
+sudo docker-compose exec web python manage.py migrate
+sudo docker-compose exec web python manage.py collectstatic
+sudo docker-compose exec web python manage.py createsuperuser
+
+location / {
+    proxy_pass http://localhost:8000;
+    proxy_set_header Host $http_host;
+    proxy_redirect off;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    client_max_body_size 20m;
+}
+
+server {
+    listen                  443 ssl http2;
+    listen                  [::]:443 ssl http2;
+    server_name             crynox.tech;
+    # SSL
+    ssl_certificate         /etc/letsencrypt/live/crynox.tech/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/crynox.tech/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/crynox.tech/chain.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    # reverse proxy
+    location / {
+        proxy_pass http://localhost:8000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+}
+
+# subdomains redirect
+server {
+    listen                  443 ssl http2;
+    listen                  [::]:443 ssl http2;
+    server_name             *.crynox.tech;
+    # SSL
+    ssl_certificate         /etc/letsencrypt/live/crynox.tech/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/crynox.tech/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/crynox.tech/chain.pem;
+    return                  301 https://crynox.tech$request_uri;
+}
+
+# HTTP redirect
+server {
+    listen      80;
+    listen      [::]:80;
+    server_name .crynox.tech;
+
+    location / {
+        return 301 https://crynox.tech$request_uri;
+    }
+}

@@ -1,0 +1,183 @@
+// // // // // // // // // Tracker v.9 // // // // // // // // // // // // // // // // // // // // // // //
+
+
+
+// Таблица CustomUser
+// Информация о пользователе и детали аккаунта
+Table CustomUser {
+  id int // идентификатор пользователя
+  app account // аккаунт приложения
+
+  username varchar // имя пользователя
+  password varchar // пароль
+  password_confirmation varchar // подтверждение пароля
+
+  email email // электронная почта
+  phone phonenumber // телефонный номер
+  workshop id [ref: > Workshop.id] // идентификатор цеха
+
+  first_name varchar // имя
+  last_name varchar // фамилия
+  about_me richtext // о себе
+  avatar img // аватар
+
+  telegram_chat_id varchar // идентификатор чата в Telegram
+  account_type choice // тип аккаунта
+
+  subscription_type varchar // тип подписки
+  subscription_start datetime // начало подписки
+
+  created_at datetime // дата создания
+  updated_at datetime // дата обновления
+}
+
+
+
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+
+
+
+// Таблица Notepad
+// Заметки и напоминания пользователя
+Table Notepad {
+  id int // идентификатор заметки
+  app note // приложение для заметок
+
+  body richtext // содержимое заметки
+  workshop id [ref: - Workshop.id] // идентификатор цеха
+
+  created_at datetime // дата создания
+  updated_at datetime // дата обновления
+}
+
+
+
+// Таблица TailoringComment
+// Комментарии к задачам пошива
+Table TailoringComment {
+  id int // идентификатор комментария
+  app note // приложение для заметок
+
+  owner int [ref: > CustomUser.id] // владелец комментария
+  workshop id [note: 'owner.workshop'] // идентификатор цеха владельца
+
+  tailoring id [ref: > Tailoring.id] // идентификатор пошива
+  body richtext // текст комментария
+
+  created_at datetime // дата создания
+  updated_at datetime // дата обновления
+}
+
+
+
+// Таблица ReportComment
+// Комментарии к отчетам
+Table ReportComment {
+  id int // идентификатор комментария
+  app note // приложение для заметок
+
+  owner int [ref: > CustomUser.id] // владелец комментария
+  workshop id [note: 'owner.workshop'] // идентификатор цеха владельца
+
+  report id [ref: > Report.id] // идентификатор отчета
+  body richtext // текст комментария
+
+  created_at datetime // дата создания
+  updated_at datetime // дата обновления
+}
+
+
+
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+
+
+
+// Таблица Workshop
+// Информация о цехах
+Table Workshop {
+  id int // идентификатор цеха
+  app workshop // приложение для управления цехом
+
+  title varchar // название
+  description richtext // описание
+
+  head id [ref: > CustomUser.id] // руководитель
+  worker id [ref: <> CustomUser.id] // сотрудники
+
+  created_at datetime // дата создания
+  updated_at datetime // дата обновления
+}
+
+
+
+// Таблица Tailoring
+// Детали заказов на пошив
+Table Tailoring {
+  id int // идентификатор заказа
+  app workshop // приложение для управления цехом
+
+  author int [ref: > CustomUser.id] // автор записи
+  workshop id [note: 'author.workshop'] // идентификатор цеха пользователя
+
+  model varchar // модель
+  master varchar // мастер
+
+  quantity int // количество
+  master_unit_price decimal // цена за единицу работы мастера
+
+  done int // выполнено
+  total_master_payment decimal [note: 'master_unit_price * done'] // общая оплата мастеру
+
+  created_at datetime // дата создания
+  updated_at datetime // дата обновления
+}
+
+
+
+// Таблица Expense
+// Финансовые расходы цеха
+Table Expense {
+  id int // идентификатор расхода
+  app workshop // приложение для управления цехом
+
+  author int [ref: > CustomUser.id] // автор записи
+  workshop id [note: 'author.workshop'] // идентификатор цеха пользователя
+
+  title varchar // название расхода
+  value decimal // сумма расхода
+
+  created_at datetime // дата создания
+  updated_at datetime // дата обновления
+}
+
+
+
+// Таблица Report
+// Финансовые и производственные отчеты
+Table Report {
+  id int // идентификатор отчета
+  app workshop // приложение для управления цехом
+
+  author int [ref: > CustomUser.id] // автор записи
+  workshop id [note: 'author.workshop'] // идентификатор цеха пользователя
+
+  tailoring id [ref: < Tailoring.id] // идентификатор пошива
+  expenses id [ref: <> Expense.id] // идентификаторы расходов
+
+  expenses_total decimal [note: 'sum(expenses)'] // общая сумма расходов
+  production_total decimal [note: 'expenses_total + tailoring.total_master_payment'] // общая стоимость производства
+  production_unit decimal [note: 'production_total / tailoring.done'] // стоимость производства за единицу
+
+  unit decimal [note: 'production_unit + margin'] // цена продажи за единицу
+  total decimal [note: 'unit * tailoring.done'] // общая сумма для продажи
+
+  margin decimal // маржа
+  profit decimal [note: 'total - production_total'] // прибыль
+
+  created_at datetime // дата создания
+  updated_at datetime // дата обновления
+}
