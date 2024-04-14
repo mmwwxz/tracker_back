@@ -24,6 +24,12 @@ SECRET_KEY = config_settings('SECRET_KEY')
 DEBUG = config_settings('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = config_settings('ALLOWED_HOSTS').split(' ')
+CSRF_COOKIE_SECURE = config_settings('CSRF_COOKIE_SECURE').split(' ')
+SESSION_COOKIE_SECURE = config_settings('SESSION_COOKIE_SECURE').split(' ')
+SECURE_PROXY_SSL_HEADER = config_settings('SECURE_PROXY_SSL_HEADER').split(' ')
+CSRF_TRUSTED_ORIGINS = [
+    'https://xn--e1aaowdh.site',
+]
 
 
 INSTALLED_APPS = [
