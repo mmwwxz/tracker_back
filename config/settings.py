@@ -248,4 +248,5 @@ CORS_ALLOW_METHODS = (
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
     'https://xn--e1aaowdh.site',
+    'https://www.xn--e1aaowdh.site',
 ]
