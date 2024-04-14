@@ -29,6 +29,7 @@ SESSION_COOKIE_SECURE = config_settings('SESSION_COOKIE_SECURE').split(' ')
 SECURE_PROXY_SSL_HEADER = config_settings('SECURE_PROXY_SSL_HEADER').split(' ')
 CSRF_TRUSTED_ORIGINS = [
     'https://xn--e1aaowdh.site',
+    'https://www.xn--e1aaowdh.site',
 ]
 
 
