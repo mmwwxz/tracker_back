@@ -23,10 +23,10 @@ SECRET_KEY = config_settings('SECRET_KEY')
 
 DEBUG = config_settings('DEBUG', cast=bool)
 
-ALLOWED_HOSTS = config_settings('ALLOWED_HOSTS').split(' ')
-CSRF_COOKIE_SECURE = config_settings('CSRF_COOKIE_SECURE').split(' ')
-SESSION_COOKIE_SECURE = config_settings('SESSION_COOKIE_SECURE').split(' ')
-SECURE_PROXY_SSL_HEADER = config_settings('SECURE_PROXY_SSL_HEADER').split(' ')
+ALLOWED_HOSTS = ['34.196.17.103', 'xn--e1aaowdh.site', 'www.xn--e1aaowdh.site']
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 CSRF_TRUSTED_ORIGINS = [
     'https://xn--e1aaowdh.site',
 ]
