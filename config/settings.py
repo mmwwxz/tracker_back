@@ -23,7 +23,7 @@ SECRET_KEY = config_settings('SECRET_KEY')
 
 DEBUG = config_settings('DEBUG', cast=bool)
 
-ALLOWED_HOSTS = ['34.196.17.103', 'xn--e1aaowdh.site', 'www.xn--e1aaowdh.site']
+ALLOWED_HOSTS = ['34.196.17.103', 'xn--e1aaowdh.site', 'www.xn--e1aaowdh.site', '']
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -246,7 +246,7 @@ CORS_ALLOW_METHODS = (
     "PUT",
 )
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = [
+CORS_ALLOWED_ORIGINS = [
     'https://xn--e1aaowdh.site',
     'https://www.xn--e1aaowdh.site',
 ]
